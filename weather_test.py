@@ -1,4 +1,9 @@
 import requests
+import os
+import csv 
+from datetime import datetime
+
+fieldnames = ["date", "city", "temperature"]
 
 def get_coordinates(city):
     try:    
@@ -27,6 +32,20 @@ def get_temperature(lat, lon):
     except requests.exceptions.ConnectionError:
         print("We ran into a Connection Error")
         return None
+    
+
+def log_weather(city,temp):
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")    
+    if os.path.exists("weather_log.csv"):
+        with open("weather_log.csv", "a", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=["date", "city", "temperature"])
+            writer.writerow({"date": now, "city": city,"temperature": temp})
+    else:
+        with open ("weather_log.csv", "w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerow({"date": now, "city": city,"temperature": temp})
+
 
 while True:
     city = input("Enter City: ")
@@ -43,6 +62,8 @@ while True:
 
         else:    
             print(f"The current temperature in {city} is {temp} °F")
+            log_weather(city, temp)
             answer = input("Would you like the search another city? (Y/N): ")
             if answer.lower() == "n":
+                print("GoodBye!")
                 break
