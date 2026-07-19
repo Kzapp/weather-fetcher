@@ -25,6 +25,6 @@ def get_temperature(lat, lon):
         response = requests.get(url)
         data = response.json()
         return data["current"]["temperature_2m"]
-    except requests.exceptions.ConnectionError:
+    except (requests.exceptions.ConnectionError, KeyError):
         print("We ran into a Connection Error")
         return None
