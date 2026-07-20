@@ -1,5 +1,5 @@
 from weather_api import get_coordinates, get_temperature
-from weather_logger import log_weather
+from weather_db import log_weather
 
 
 while True:
